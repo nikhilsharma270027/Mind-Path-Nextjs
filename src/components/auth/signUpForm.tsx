@@ -1,13 +1,15 @@
-"use client";
+'use client';
 
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+// import { signupSchema } from "@/schemas/signupSchema";
+import { z } from "zod";
 import { useRouter } from "next/navigation";
-import { email, z } from "zod";
-import { toast } from "sonner"
-import React from "react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import toast from "react-hot-toast";
+import { Eye, EyeClosed } from "lucide-react";
 
-const signUpSchema = z.object({
+const signupSchema = z.object({
   username: z.string(),
   email: z.string().email(),
   password: z.string()
@@ -18,82 +20,129 @@ const signUpSchema = z.object({
 ,
 });
 
+export default function SignupForm() {
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Partial<z.infer<typeof signupSchema>>>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
-export default function SignUpForm() {
-    const router = useRouter();
-    const [loading, setLoading] = React.useState(false);
-    const [errors, setErrors] = React.useState<{ [key: string]: string } | null>({});
-
-    const validateForm = (name: string, email: string, password: string) => {
+  const validateForm = (username: string, email: string, password: string) => {
     try {
-      signUpSchema.parse({ name, email, password });
+      signupSchema.parse({ username, email, password });
       setErrors({});
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const newErrors: { [key: string]: string } = {};
-        error.errors.forEach((err: any) => {
-          if (err.path) {
-            newErrors[err.path[0]] = err.message;
+        const fieldErrors: Partial<z.infer<typeof signupSchema>> = {};
+        error.issues.forEach((err) => {
+          if (err.path.length > 0) {
+            fieldErrors[err.path[0] as keyof z.infer<typeof signupSchema>] = err.message;
           }
         });
-        setErrors(newErrors);
+        setErrors(fieldErrors);
       }
       return false;
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
-  }  
+    const formData = new FormData(e.currentTarget);
+    const username = formData.get("username") as string;
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-    return (
-        <form onSubmit={handleSubmit} className="space-x-4">
-            <div className="mb-3">
-                <Input
-                  type="text" 
-                  name="name"
-                  placeholder="Name"
-                  required                   
-                  className="w-full text-black bg-white" />
-                  {
-                    errors?.name && (
-                      <p className="text-red-500 text-sm">{errors.name}</p>
-                    )}
-            </div>
-            <div className="mb-3">
-                <Input 
-                  type="email" 
-                  name="email"
-                  placeholder="Email"
-                  required
-                  className="w-full text-black bg-white" />
-                  {
-                    errors?.email && (
-                      <p className="text-red-500 text-sm">{errors.email}</p>
-                    )
-                  }
-            </div>
-            <div>
-            <Input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              className={`w-full text-black bg-white ${errors!.password ? 'border-red-500' : ''}`}
-            />
-            {errors!.password && (
-              <p className="text-sm text-red-500 mt-1">{errors!.password}</p>
-            )}
-            <p className="text-xs text-gray-50 mt-1 mb-3">
-              Password must be at least 8 characters and contain uppercase, lowercase, and numbers
-            </p>
-          </div>
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Creating account..." : "Sign Up"}
-          </Button>
-        </form>
-    )
+    if (!validateForm(username, email, password)) {
+      setLoading(false);
+      return;
+    }
 
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, email, password })
+      });
+      console.log("Signup response:", res);
+
+      if (res.status === 409) {
+        toast.error("User already exists");
+      } else if (res.ok) {
+        toast.success("Registration successful");
+      } else {
+        toast.error("Something went wrong");
+      }
+      const data = await res.json();
+
+      
+
+      if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      toast.success("Signup successful!");
+      router.push("/signin");
+    } catch (error: any) {
+      toast.error(error.message || "Signup failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <Input
+        type="text"
+        name="username"
+        placeholder="Username"
+        required
+        className="w-full text-black bg-white"
+      />
+      {errors?.username && (
+        <p className="text-red-500 text-sm">{errors.username}</p>
+      )}
+
+      <Input
+        type="email"
+        name="email"
+        placeholder="Email"
+        required
+        className="w-full text-black bg-white"
+      />
+      {errors?.email && (
+        <p className="text-red-500 text-sm">{errors.email}</p>
+      )}
+      <div>
+
+        <Input
+          type={showPassword ? "text" : "password"}
+          onChange={() => setShowPassword(!showPassword)}
+          name="password"
+          placeholder="Password"
+          required
+          className="relative w-full text-black bg-white"
+        />
+          <div className="absolute right-3 top-3 cursor-pointer">
+        {
+          showPassword ? (
+            <span onClick={() => setShowPassword(false)}><Eye /></span>
+          ) : (
+            <span onClick={() => setShowPassword(true)}><EyeClosed /></span>
+          )
+        }
+      </div>
+        </div>
+      {errors?.password && (
+        <p className="text-red-500 text-sm">{errors.password}</p>
+      )}
+
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? "Signing up..." : "Signup"}
+      </Button>
+    </form>
+  );
 }

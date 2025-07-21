@@ -6,15 +6,12 @@ import { toast } from "sonner"
 import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { signIn } from "next-auth/react";
+
 
 const signInSchema = z.object({
-  email: z.string().email(),
-  password: z.string()
-  .min(6, "Password must be at least 6 characters long")
-  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-  .regex(/\d/, "Password must contain at least one number")
-,
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 
@@ -31,7 +28,7 @@ export default function SignInForm() {
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: { [key: string]: string } = {};
-        error.errors.forEach((err: any) => {
+        error.issues.forEach((err: any) => {
           if (err.path) {
             newErrors[err.path[0]] = err.message;
           }
@@ -42,10 +39,46 @@ export default function SignInForm() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
-  }  
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    if (!validateForm(email, password)) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      console.log("SignIn response:", res);
+
+      if (res?.error) {
+        toast.error("Login failed. Please check your credentials.");
+        setLoading(false);
+        return;
+      }
+
+      toast.success("Login successful!");
+      setLoading(false);
+
+      router.push("/home");
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      toast.error("An unexpected error occurred. Please try again.");
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };  
 
     return (
         <form onSubmit={handleSubmit} className="space-x-4">

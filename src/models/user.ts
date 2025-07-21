@@ -67,7 +67,7 @@ const studyPlanSchema = new mongoose.Schema<IStudyPlan>({
 
 // Define interface for User document
 interface IUser {
-  name: string;
+  username: string;
   email: string;
   password: string;
   subjects: string[];
@@ -84,7 +84,7 @@ interface IUser {
 
 // Enhanced User schema
 const userSchema = new mongoose.Schema<IUser>({
-  name: {
+  username: {
     type: String,
     required: true,
   },

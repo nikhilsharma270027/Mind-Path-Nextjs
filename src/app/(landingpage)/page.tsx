@@ -36,6 +36,7 @@ export default function Page() {
     return (
         <div>
             {/* <h1>Welcome to the Landing Page</h1> */}
+            hello
         </div>
     );
 }
