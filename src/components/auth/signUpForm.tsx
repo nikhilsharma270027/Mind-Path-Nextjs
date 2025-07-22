@@ -116,26 +116,23 @@ export default function SignupForm() {
       {errors?.email && (
         <p className="text-red-500 text-sm">{errors.email}</p>
       )}
-      <div>
 
+      <div className="relative w-full">
         <Input
           type={showPassword ? "text" : "password"}
-          onChange={() => setShowPassword(!showPassword)}
           name="password"
           placeholder="Password"
           required
-          className="relative w-full text-black bg-white"
+          className="w-full text-black bg-white pr-10" // note the pr-10 to prevent text overlap
         />
-          <div className="absolute right-3 top-3 cursor-pointer">
-        {
-          showPassword ? (
-            <span onClick={() => setShowPassword(false)}><Eye /></span>
-          ) : (
-            <span onClick={() => setShowPassword(true)}><EyeClosed /></span>
-          )
-        }
-      </div>
+        <div
+          className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <Eye /> : <EyeClosed />}
         </div>
+      </div>
+
       {errors?.password && (
         <p className="text-red-500 text-sm">{errors.password}</p>
       )}

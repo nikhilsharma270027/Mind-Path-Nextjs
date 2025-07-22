@@ -7,6 +7,7 @@ import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { signIn } from "next-auth/react";
+import { Eye, EyeClosed } from "lucide-react";
 
 
 const signInSchema = z.object({
@@ -19,6 +20,7 @@ export default function SignInForm() {
     const router = useRouter();
     const [loading, setLoading] = React.useState(false);
     const [errors, setErrors] = React.useState<{ [key: string]: string } | null>({});
+    const [showPassword, setShowPassword] = React.useState(false);
 
     const validateForm = (email: string, password: string) => {
     try {
@@ -69,7 +71,7 @@ export default function SignInForm() {
       toast.success("Login successful!");
       setLoading(false);
 
-      router.push("/home");
+      router.push("/");
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -97,13 +99,21 @@ export default function SignInForm() {
                   }
             </div>
             <div>
-            <Input
-              type="password"
-              name="password"
-              placeholder="Password"
-              required
-              className={`w-full text-black bg-white ${errors!.password ? 'border-red-500' : ''}`}
-            />
+            <div className="relative w-full">
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                required
+                className="w-full text-black bg-white pr-10" // note the pr-10 to prevent text overlap
+              />
+              <div
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <Eye /> : <EyeClosed />}
+              </div>
+            </div>
             {errors!.password && (
               <p className="text-sm text-red-500 mt-1">{errors!.password}</p>
             )}

@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { BookOpen, Brain, BrainCircuit, Clock1 } from "lucide-react";
+import { HeroSection } from "@/components/sections/HeroSection";
+import { FeaturesGrid } from "@/components/sections/FeatureGrid";
 
 const features = [
   {
@@ -29,14 +31,21 @@ export default function Page() {
 
     useEffect(() => {
         if (session) {
-            router.push('/dashboard');
+            router.push('/');
         }
     }, [session, router]);
 
     return (
-        <div>
-            {/* <h1>Welcome to the Landing Page</h1> */}
-            hello
+        <div className="container mx-auto px-4 py-12 sm:py-36 bg-transparent">
+           <HeroSection 
+              title="Welcome to"
+              highlighttext="MindPath"
+              description="Your AI-powered study companion for personalized learning."
+              ctaText={session ? "Move to Dashboard" : "Get Started"}
+              ctaLink={session ? "/dashboard" : "/register"}
+           />
+
+           <FeaturesGrid features={features} />
         </div>
     );
 }

@@ -6,7 +6,7 @@ export default function LandingPageLayout({ children } : {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 bg-[#EFE9D5] w-full max-w-[100vw] overflow-x-hidden">
+      <main className="flex-1 bg-transparent w-full max-w-[100vw] overflow-x-hidden">
         {children}
       </main>
     </div>
