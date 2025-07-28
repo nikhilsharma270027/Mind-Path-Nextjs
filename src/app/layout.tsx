@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner"
 import { NextAuthProvider } from "@/providers/NextAuthProvider";
 // import { PostHogProvider } from '@/components/posthog-provider';
 import dynamic from "next/dynamic";
+import Header from "@/components/Header";
 
 // const PostHogPageView = dynamic(() => import('@/components/PostHogPageView'), { ssr: false });
 
@@ -32,6 +33,7 @@ export default function RootLayout({
       >
         {/* <PostHogPageView /> */}
         <NextAuthProvider>
+          <Header />
           {children}
         </NextAuthProvider>
         <Toaster />

@@ -71,7 +71,7 @@ export default function SignInForm() {
       toast.success("Login successful!");
       setLoading(false);
 
-      router.push("/");
+      router.push("/home");
       router.refresh();
     } catch (error) {
       console.error(error);

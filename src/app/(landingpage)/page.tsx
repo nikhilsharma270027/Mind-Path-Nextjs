@@ -31,7 +31,7 @@ export default function Page() {
 
     useEffect(() => {
         if (session) {
-            router.push('/');
+            router.push('/home');
         }
     }, [session, router]);
 
