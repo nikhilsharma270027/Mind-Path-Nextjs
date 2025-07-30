@@ -27,20 +27,20 @@ const Dropdown: React.FC<DropdownProps> = ({
   const isBreakDropdown = label.includes('Break');
 
   return (
-    <div className="relative mt-10">
-      <label className="block text-sm font-medium text-purple-200 mb-2 drop-shadow-sm">
+    <div className="relative mt-6">
+      <label className="block text-sm font-medium text-white/90 mb-3 drop-shadow-sm tracking-wide">
         {label}
       </label>
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full bg-white/20 backdrop-blur-sm border border-white/30 rounded-md px-3 py-2 text-left text-white hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400 transition-all shadow-lg"
+          className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-4 py-3 text-left text-white hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/40 transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02]"
         >
-          <span>
+          <span className="drop-shadow-sm font-medium">
             {selectedValue} {suffix}
           </span>
           <ChevronDown
-            className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-purple-200 transition-transform ${
+            className={`absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/70 transition-transform duration-200 ${
               isOpen ? 'rotate-180' : ''
             }`}
           />
@@ -48,23 +48,25 @@ const Dropdown: React.FC<DropdownProps> = ({
 
         {isOpen && (
           <div
-            className={`absolute z-20 w-full bg-gray-900/95 backdrop-blur-lg border border-purple-400/50 rounded-md shadow-2xl max-h-40 overflow-auto ${
-              isBreakDropdown ? 'bottom-full mb-1' : 'mt-1'
+            className={`absolute z-20 w-full bg-black/30 backdrop-blur-lg border border-white/20 rounded-lg shadow-2xl max-h-48 overflow-auto ${
+              isBreakDropdown ? 'bottom-full mb-2' : 'mt-2'
             }`}
           >
             {options.map((option) => (
               <button
                 key={option}
                 onClick={() => onSelect(option)}
-                className={`w-full px-3 py-2 text-left hover:bg-purple-600/60 focus:outline-none focus:bg-purple-600/60 transition-all ${
+                className={`w-full px-4 py-3 text-left hover:bg-white/15 focus:outline-none focus:bg-white/15 transition-all duration-200 first:rounded-t-lg last:rounded-b-lg ${
                   selectedValue === option
-                    ? 'bg-purple-600/80 text-white'
-                    : 'text-gray-100'
+                    ? 'bg-white/20 text-white font-medium'
+                    : 'text-white/90'
                 }`}
               >
-                {option} {suffix}
+                <span className="drop-shadow-sm">
+                  {option} {suffix}
+                </span>
                 {selectedValue === option && (
-                  <span className="float-right text-purple-300">✓</span>
+                  <span className="float-right text-white/80 text-lg">✓</span>
                 )}
               </button>
             ))}
@@ -140,76 +142,65 @@ const StudyTimer: React.FC = () => {
   };
 
   return (
-    <div
-      className="min-h-220 p-4 relative"
-      style={{
-        background:
-          'radial-gradient(ellipse at center, rgba(139, 69, 199, 0.3) 0%, rgba(88, 28, 135, 0.4) 25%, rgba(67, 56, 202, 0.5) 50%, rgba(30, 27, 75, 0.8) 75%, rgba(15, 15, 35, 0.95) 100%)',
-        backgroundAttachment: 'fixed',
-      }}
-    >
-      {/* Animated stars */}
-      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute bg-white rounded-full opacity-70 animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 3 + 1}px`,
-              height: `${Math.random() * 3 + 1}px`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${Math.random() * 3 + 2}s`,
-            }}
-          />
-        ))}
-      </div> */}
-
+    <div className="min-h-screen p-4 relative w-full text-white">
+      {/* Glass overlay for full coverage */}
+      <div className="fixed bg-black/20 backdrop-blur-sm pointer-events-none" />
+      
       <div className="max-w-4xl mx-auto relative z-10">
         <header className="flex justify-between items-center mb-12">
-          <h1 className="text-3xl font-bold text-white drop-shadow-lg">
+          <h1 className="text-4xl font-bold text-white drop-shadow-lg">
             Study Timer
           </h1>
-          <p className="text-purple-200">Track your focus sessions</p>
+          <p className="text-white/80 text-lg drop-shadow-sm">Track your focus sessions</p>
         </header>
 
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-8 max-w-md mx-auto relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent rounded-2xl"></div>
+        <div className="relative bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-8 max-w-lg mx-auto overflow-hidden">
+          {/* Glass effect overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/5 rounded-2xl pointer-events-none" />
+          
           <div className="relative z-10">
             <div className="text-center mb-8">
-              <h2 className="text-xl font-semibold text-white mb-4 drop-shadow-md">
-                {isBreakTime ? 'Break Time' : 'Focus Time'}
-              </h2>
-              <div className="text-6xl font-bold text-white mb-6 font-mono drop-shadow-lg">
-                {formatTime(timeLeft)}
+              <div className="mb-6">
+                <h2 className="text-2xl font-semibold text-white mb-2 drop-shadow-md">
+                  {isBreakTime ? '🌟 Break Time' : '🎯 Focus Time'}
+                </h2>
+                <div className="w-20 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto rounded-full" />
+              </div>
+              
+              <div className="relative mb-8">
+                <div className="text-7xl font-bold text-white mb-2 font-mono drop-shadow-lg tracking-wider">
+                  {formatTime(timeLeft)}
+                </div>
+                <div className="text-white/60 text-sm uppercase tracking-widest font-medium">
+                  {isBreakTime ? 'Break Session' : 'Focus Session'}
+                </div>
               </div>
 
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-4 justify-center">
                 <button
                   onClick={handleStart}
                   disabled={isRunning}
-                  className="px-6 py-2 bg-purple-600/80 backdrop-blur-sm text-white rounded-md hover:bg-purple-700/80 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-all border border-purple-400/30 shadow-lg"
+                  className="px-8 py-3 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white/20 font-medium transition-all duration-200 border border-white/30 shadow-lg hover:shadow-xl hover:scale-105 disabled:hover:scale-100"
                 >
-                  Start
+                  {isRunning ? 'Running...' : 'Start'}
                 </button>
                 <button
                   onClick={handleReset}
-                  className="px-6 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-md hover:bg-white/30 font-medium transition-all shadow-lg"
+                  className="px-8 py-3 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-lg hover:bg-white/15 font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
                 >
                   Reset
                 </button>
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 border-t border-white/10 pt-8">
               <Dropdown
                 isOpen={focusDropdownOpen}
                 setIsOpen={setFocusDropdownOpen}
                 selectedValue={focusDuration}
                 options={focusOptions}
                 onSelect={handleFocusDurationChange}
-                label="Focus Duration (minutes)"
+                label="Focus Duration"
               />
               <Dropdown
                 isOpen={breakDropdownOpen}
@@ -217,20 +208,38 @@ const StudyTimer: React.FC = () => {
                 selectedValue={breakDuration}
                 options={breakOptions}
                 onSelect={handleBreakDurationChange}
-                label="Break Duration (minutes)"
+                label="Break Duration"
               />
             </div>
           </div>
         </div>
 
         {isRunning && (
-          <div className="text-center mt-6">
-            <div className="inline-flex items-center px-4 py-2 bg-purple-900/40 backdrop-blur-md text-purple-100 rounded-full text-sm font-medium border border-purple-400/30 shadow-lg">
-              <div className="w-2 h-2 bg-purple-300 rounded-full mr-2 animate-pulse"></div>
-              {isBreakTime ? 'Take a break!' : 'Focus time active'}
+          <div className="text-center mt-8">
+            <div className="inline-flex items-center px-6 py-3 bg-white/10 backdrop-blur-md text-white rounded-full text-sm font-medium border border-white/20 shadow-lg">
+              <div className="w-3 h-3 bg-white/80 rounded-full mr-3 animate-pulse shadow-sm"></div>
+              <span className="drop-shadow-sm">
+                {isBreakTime ? '✨ Take a well-deserved break!' : '🔥 Focus time is active'}
+              </span>
             </div>
           </div>
         )}
+
+        {/* Progress indicator */}
+        <div className="mt-8 max-w-lg mx-auto">
+          <div className="bg-white/10 backdrop-blur-sm rounded-full h-2 border border-white/20 shadow-inner">
+            <div 
+              className="bg-gradient-to-r from-white/40 to-white/60 h-full rounded-full transition-all duration-1000 shadow-sm"
+              style={{ 
+                width: `${((isBreakTime ? breakDuration : focusDuration) * 60 - timeLeft) / ((isBreakTime ? breakDuration : focusDuration) * 60) * 100}%` 
+              }}
+            />
+          </div>
+          <div className="flex justify-between text-xs text-white/60 mt-2 font-medium">
+            <span>Start</span>
+            <span>{isBreakTime ? 'Break' : 'Focus'} Complete</span>
+          </div>
+        </div>
       </div>
     </div>
   );

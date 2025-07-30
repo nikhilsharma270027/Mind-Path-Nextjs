@@ -27,7 +27,7 @@ export default function Header() {
               <div className="flex gap-1 sm:gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => signIn()}
+                  
                   className="border-2 border-black text-xs sm:text-sm px-2 sm:px-4"
                 >
                   <Link href="/signin"> Sign In</Link>

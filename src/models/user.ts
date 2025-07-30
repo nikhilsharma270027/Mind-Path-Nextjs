@@ -67,7 +67,7 @@ const studyPlanSchema = new mongoose.Schema<IStudyPlan>({
 
 // Define interface for User document
 interface IUser {
-  username: string;
+  name: string;
   email: string;
   password: string;
   subjects: string[];
@@ -84,7 +84,7 @@ interface IUser {
 
 // Enhanced User schema
 const userSchema = new mongoose.Schema<IUser>({
-  username: {
+  name: {
     type: String,
     required: true,
   },
@@ -130,8 +130,6 @@ userSchema.index({ subjects: 1 });
 userSchema.methods.addStudyPlan = function(plan: IStudyPlan) {
   this.savedPlans.push(plan);
   return this.save();
-
-  
 };
 
 userSchema.methods.addResource = function(resource: IResource) {

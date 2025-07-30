@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         {/* <PostHogPageView /> */}
         <NextAuthProvider>
-          <Header />
+          {/* <Header /> */}
           {children}
         </NextAuthProvider>
         <Toaster />
