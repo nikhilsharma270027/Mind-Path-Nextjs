@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { Eye, EyeClosed } from "lucide-react";
 
 const signupSchema = z.object({
-  username: z.string(),
+  name: z.string(),
   email: z.string().email(),
   password: z.string()
   .min(6, "Password must be at least 6 characters long")
@@ -26,9 +26,9 @@ export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const validateForm = (username: string, email: string, password: string) => {
+  const validateForm = (name: string, email: string, password: string) => {
     try {
-      signupSchema.parse({ username, email, password });
+      signupSchema.parse({ name, email, password });
       setErrors({});
       return true;
     } catch (error) {
@@ -102,8 +102,8 @@ export default function SignupForm() {
         required
         className="w-full text-black bg-white"
       />
-      {errors?.username && (
-        <p className="text-red-500 text-sm">{errors.username}</p>
+      {errors?.name && (
+        <p className="text-red-500 text-sm">{errors.name}</p>
       )}
 
       <Input
