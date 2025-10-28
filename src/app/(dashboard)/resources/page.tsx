@@ -147,7 +147,7 @@ export default function ResourcesPage() {
       ) : (
         <div id="stored-resources" className="mt-8 sm:mt-12">
           <Separator className="my-6 sm:my-8" />
-          <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Your Curated Resources</h2>
+          <h2 className="text-xl text-white sm:text-2xl font-bold mb-4 sm:mb-6">Your Curated Resources</h2>
           {storedResources.length > 0 ? (
             <>
               <div className="space-y-4 sm:space-y-6">

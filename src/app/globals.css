@@ -45,8 +45,7 @@
 
 body {
   background-image: url('../../public/webbg2.png');
-   background-repeat: no-repeat;
-  background-position: inherit;
+  background-repeat: no-repeat;
   background-size: cover; /* Make the image cover the entire container */
   background-position: center; /* Position the image at the center */
   background-attachment: fixed;
@@ -234,6 +233,27 @@ p {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Auth page animations */
+@keyframes slide-in-from-top-1 {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation-duration: 0.2s;
+  animation-fill-mode: both;
+}
+
+.slide-in-from-top-1 {
+  animation-name: slide-in-from-top-1;
 }
 
 /* Custom scrollbar */
