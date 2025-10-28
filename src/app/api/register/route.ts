@@ -5,8 +5,8 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
     try {
-        const { username, email, password } = await req.json();
-        console.log("Registering user:", { username, email, password });
+        const { name, email, password } = await req.json();
+        console.log("Registering user:", { name, email, password });
         await connectMongoDB();
 
         const UserExists = await User.findOne({ email });
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         // Here you would typically hash the password and save the user to your database
         // For demonstration, let's assume the user is saved successfully
         const hashedPassword = await bcrypt.hash(password, 10);
-        await User.create({ username, email, password: hashedPassword });
+        await User.create({ name, email, password: hashedPassword });
 
         return NextResponse.json(
             { message: "User registered successfully" },
