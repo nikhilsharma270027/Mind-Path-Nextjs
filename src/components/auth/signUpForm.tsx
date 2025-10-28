@@ -46,52 +46,47 @@ export default function SignupForm() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  e.preventDefault();
+  setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    const username = formData.get("username") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+  const formData = new FormData(e.currentTarget);
+  const username = formData.get("username") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-    if (!validateForm(username, email, password)) {
-      setLoading(false);
-      return;
-    }
+  if (!validateForm(username, email, password)) {
+    setLoading(false);
+    return;
+  }
 
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, email, password })
-      });
-      console.log("Signup response:", res);
+  try {
+    const res = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // ✅ FIX: Send name instead of username
+      body: JSON.stringify({ name: username, email, password }),
+    });
 
-      if (res.status === 409) {
-        toast.error("User already exists");
-      } else if (res.ok) {
-        toast.success("Registration successful");
-      } else {
-        toast.error("Something went wrong");
-      }
-      const data = await res.json();
+    console.log("Signup response:", res);
 
-      
-
-      if (!res.ok) {
-        throw new Error(data.message || "Something went wrong");
-      }
-
-      toast.success("Signup successful!");
+    if (res.status === 409) {
+      toast.error("User already exists");
+    } else if (res.ok) {
+      toast.success("Registration successful");
       router.push("/signin");
-    } catch (error: any) {
-      toast.error(error.message || "Signup failed.");
-    } finally {
-      setLoading(false);
+    } else {
+      toast.error("Something went wrong");
     }
-  };
+
+  } catch (error: any) {
+    toast.error(error.message || "Signup failed.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
