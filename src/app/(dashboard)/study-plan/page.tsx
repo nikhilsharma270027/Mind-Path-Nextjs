@@ -106,7 +106,7 @@ export default function StudyPlanPage() {
       {/* Stored Plans Section */}
       <div id="stored-plans" className="mt-8 sm:mt-12">
         <Separator className="my-6 sm:my-8" />
-        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Your Study Plans</h2>
+        <h2 className="text-xl text-white sm:text-2xl font-bold mb-4 sm:mb-6">Your Study Plans</h2>
         
         {loading ? (
           <div className="space-y-4 sm:space-y-6">

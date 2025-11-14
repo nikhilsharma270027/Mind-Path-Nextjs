@@ -44,7 +44,7 @@
 }
 
 body {
-  background-image: url('../../public/webbg2.png');
+  background-image: url('../../public/villagebg.png');
   background-repeat: no-repeat;
   background-size: cover; /* Make the image cover the entire container */
   background-position: center; /* Position the image at the center */
