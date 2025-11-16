@@ -71,7 +71,7 @@ export default function ChatInterface({
       </div>
 
       {/* Messages Area */}
-      <ScrollArea className="flex-1 p-3 sm:p-4 pb-[80px] sm:pb-[88px]">
+      <ScrollArea className="flex-1 p-3 sm:p-4 pb-[80px] sm:pb-[88px] overflow-auto">
         <div className="space-y-4">
           {messages.map((message, index) => {
             const messageId = message._id || `msg-${index}`;

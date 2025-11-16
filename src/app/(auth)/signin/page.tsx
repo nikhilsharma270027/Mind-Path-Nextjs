@@ -29,7 +29,7 @@ export default function RegisterPage() {
       </div>
       <div className="w-full max-w-md">
         <div className="bg-white/10 backdrop-blur-md px-4 sm:px-10 py-6 sm:py-8 shadow-lg rounded-lg sm:rounded-xl border-2 border-white/20">
-          <h1 className="text-sm sm:text-lg font-bold text-center mb-4 sm:mb-6 text-gray-900">
+          <h1 className="text-sm sm:text-lg font-bold text-center mb-4 sm:mb-6 text-white">
             Create your account
           </h1>
           <SignInForm />

@@ -18,7 +18,9 @@ export async function POST(
       );
     }
 
-    const { documentId } = params;
+    // Handle both sync and async params
+    const paramss = 'then' in params ? await params : params;
+    const { documentId } =  paramss;
     const body = await request.json();
 
     const response = await fetch(`${apiUrl}/pdf/${documentId}/chat`, {
