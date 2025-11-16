@@ -19,7 +19,9 @@ export async function GET(
       );
     }
 
-    const documentId = params.documentId;
+    // Get the document ID
+    const paramss = 'then' in params ? await params : params;
+    const documentId = paramss.documentId;
     const apiUrl = process.env.API_URL || 'http://localhost:5000';
     
     const response = await fetch(`${apiUrl}/pdf/${documentId}/history`, {
