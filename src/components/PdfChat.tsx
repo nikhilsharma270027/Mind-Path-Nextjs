@@ -188,7 +188,7 @@ export default function PdfChat({ documentId }: PdfChatProps) {
       </div>
 
       {/* Content Area */}
-      <div className="flex flex-1 lg:gap-4 lg:p-4 overflow-hidden">
+      <div className="flex flex-1 lg:gap-4 lg:p-4 overflow-hidden ">
         <div className={cn(
           "lg:w-[55%] w-full transition-all duration-300",
           activeView === 'pdf' ? 'block' : 'hidden lg:block'

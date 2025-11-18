@@ -14,8 +14,8 @@ import {
   Maximize2,
   Menu
 } from "lucide-react";
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
+// import 'react-pdf/dist/Page/AnnotationLayer.css';
+// import 'react-pdf/dist/Page/TextLayer.css';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import React from 'react';
@@ -247,7 +247,7 @@ export default function PdfViewer({ documentId, currentPage, onPageChange }: Pdf
 
   return (
     <div className={cn(
-      "flex flex-col border-2 border-black rounded-lg overflow-hidden relative bg-background",
+      "flex flex-col border-2 border-black rounded-lg overflow-hidden relative bg-[#F2EDE0]",
       uiState.isFullscreen ? "fixed inset-0 z-50" : "w-full h-full"
     )}>
       {/* Mobile Header */}

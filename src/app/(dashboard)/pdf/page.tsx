@@ -162,7 +162,7 @@ export default function PdfListPage() {
       <div className="flex flex-col space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold">Scriba</h1>
+          <h1 className="text-3xl font-bold text-white">Scriba</h1>
           <div className="flex items-center gap-4">
             <Input
               type="file"
@@ -192,7 +192,7 @@ export default function PdfListPage() {
         </div>
 
         {/* Content */}
-        <div className="min-h-[calc(100vh-16rem)] bg-card rounded-lg">
+        <div className="min-h-[calc(100vh-16rem)] overflow-y-auto rounded-lg bg-[#F2EDE0]">
           {isLoading ? (
             <div className="flex justify-center items-center h-[calc(100vh-16rem)]">
               <PacmanLoader color="#538B81" />
