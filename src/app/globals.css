@@ -44,7 +44,7 @@
 }
 
 body {
-  background-image: url('../../public/jain bg.jpeg');
+  background-image: url('../../public/villagebg.png');
   background-repeat: no-repeat;
   background-size: contain;
   background-size: cover; /* Make the image cover the entire container */

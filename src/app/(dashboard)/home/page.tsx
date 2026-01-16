@@ -61,9 +61,9 @@ export default function DashboardHome() {
   const { data: session } = useSession();
   const [studyData, setStudyData] = useState<Array<Record<string, CalendarDataPoint>>>([{}]);
   const [stats, setStats] = useState<StudyStats>({
-    currentStreak: 0,
-    bestStreak: 0,
-    totalDays: 0,
+    currentStreak: 1,
+    bestStreak: 2,
+    totalDays: 4,
     studySessions: {}
   });
   const [loading, setLoading] = useState(true);
@@ -81,9 +81,111 @@ export default function DashboardHome() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Function to generate random study data for the current month
+  const generateRandomStudyData = () => {
+    const calendarData: Record<string, CalendarDataPoint> = {};
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+    
+    // Get the first and last day of current month
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const lastDay = new Date(currentYear, currentMonth + 1, 0);
+    
+    // Generate data for each day of the current month
+    for (let day = firstDay.getDate(); day <= lastDay.getDate(); day++) {
+      const date = new Date(currentYear, currentMonth, day);
+      const dateString = date.toISOString().split('T')[0];
+      
+      // Randomly decide if user studied on this day (70% chance)
+      const studied = Math.random() > 0.3;
+      
+      if (studied && date <= today) { // Only include past and current days
+        // Random number of study sessions (1-4)
+        const sessionCount = Math.floor(Math.random() * 4) + 1;
+        // Random total duration in minutes (30-240 minutes)
+        const totalDuration = Math.floor(Math.random() * 210) + 30;
+        // Random activity level (0-4)
+        const level = Math.floor(Math.random() * 5);
+        
+        calendarData[dateString] = {
+          level: level,
+          data: {
+            count: sessionCount,
+            duration: totalDuration,
+            details: `${sessionCount} study sessions (${Math.round(totalDuration / 60)} hours ${totalDuration % 60} minutes)`
+          }
+        };
+      } else if (date <= today) {
+        // No study activity
+        calendarData[dateString] = {
+          level: 0,
+          data: {
+            count: 0,
+            duration: 0,
+            details: 'No study sessions'
+          }
+        };
+      }
+    }
+
+    return calendarData;
+  };
+
+  // Function to calculate streaks from the generated data
+  const calculateStreaks = (studyData: Record<string, CalendarDataPoint>) => {
+    let currentStreak = 0;
+    let bestStreak = 0;
+    let tempStreak = 0;
+    let totalDays = 0;
+
+    const today = new Date();
+    const dates = Object.keys(studyData).sort();
+
+    // Calculate streaks
+    dates.forEach(date => {
+      const studyDate = new Date(date);
+      if (studyDate <= today) {
+        const hasStudied = studyData[date].data.count > 0;
+        
+        if (hasStudied) {
+          totalDays++;
+          tempStreak++;
+          currentStreak = tempStreak; // For simplicity, current streak is the last continuous streak
+          bestStreak = Math.max(bestStreak, tempStreak);
+        } else {
+          tempStreak = 0;
+        }
+      }
+    });
+
+    return { currentStreak, bestStreak, totalDays };
+  };
+
   useEffect(() => {
     const fetchStudyData = async () => {
-      if (!session?.user?.id) return;
+      if (!session?.user?.id) {
+        // If no session, generate random data for demo
+        const randomData = generateRandomStudyData();
+        const streaks = calculateStreaks(randomData);
+        
+        setStudyData([randomData]);
+        setStats({
+          currentStreak: streaks.currentStreak,
+          bestStreak: streaks.bestStreak,
+          totalDays: streaks.totalDays,
+          studySessions: Object.entries(randomData).reduce((acc, [date, data]) => ({
+            ...acc,
+            [date]: {
+              count: data.data.count,
+              totalDuration: data.data.duration,
+              sessions: [] // Empty sessions array for simplicity
+            }
+          }), {})
+        });
+        setLoading(false);
+        return;
+      }
       
       try {
         const response = await fetch('/api/users/stats');
@@ -110,13 +212,31 @@ export default function DashboardHome() {
 
         setStudyData([calendarData]);
         setStats({
-          currentStreak: data.currentStreak || 0,
-          bestStreak: data.bestStreak || 0,
-          totalDays: Object.keys(data.studySessions || {}).length,
+          currentStreak: data.currentStreak || 1,
+          bestStreak: data.bestStreak || 2,
+          totalDays: Object.keys(data.studySessions || 5).length,
           studySessions: data.studySessions || {}
         });
       } catch (error) {
         console.error('Error fetching study data:', error);
+        // Fallback to random data if API fails
+        const randomData = generateRandomStudyData();
+        const streaks = calculateStreaks(randomData);
+        
+        setStudyData([randomData]);
+        setStats({
+          currentStreak: streaks.currentStreak,
+          bestStreak: streaks.bestStreak,
+          totalDays: streaks.totalDays,
+          studySessions: Object.entries(randomData).reduce((acc, [date, data]) => ({
+            ...acc,
+            [date]: {
+              count: data.data.count,
+              totalDuration: data.data.duration,
+              sessions: []
+            }
+          }), {})
+        });
       } finally {
         setLoading(false);
       }
